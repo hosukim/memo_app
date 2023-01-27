@@ -1,14 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Setting from "./src/screen/setting/setting";
-import Home from "./src/screen/home/home";
+import Setting from "./src/screen/setting/Setting";
+import Home from "./src/screen/home/Home";
+import { ScreenName } from "./src/constant/Screen";
 
 const RootStack = createNativeStackNavigator();
-
-export const ScreenName = {
-  home: "메모장",
-  setting: "설정",
-};
 
 export default function App() {
   return (

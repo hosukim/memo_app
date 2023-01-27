@@ -1,8 +1,9 @@
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { useState } from "react";
 import IconButton from "../../component/button/IconButton";
 import CircleButton from "../../component/button/CircleButton";
-import { ScreenName } from "../../../App";
+import { ScreenName } from "../../constant/Screen";
+import TextItem from "../../component/item/TextItem";
 
 function Home({ navigation }: any) {
   const [showAppOptions, setShowAppOptions] = useState(false);
@@ -12,6 +13,12 @@ function Home({ navigation }: any) {
 
   const onAddSticker = () => {
     // we will implement this later
+
+    ToastAndroid.showWithGravity(
+      "등록되었습니다",
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
   };
 
   const onSaveImageAsync = async () => {
@@ -26,8 +33,7 @@ function Home({ navigation }: any) {
           alignItems: "center",
         }}
       >
-        <Text>Home Screen</Text>
-        <Text>Home Screen</Text>
+        <TextItem content={"TEst TEST TEST TEST TEST"} />
       </ScrollView>
       <View style={styles.optionsContainer}>
         <View style={styles.optionsRow}>
@@ -51,11 +57,11 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#333",
+    backgroundColor: "#f3f3f3",
     alignItems: "center",
   },
   scrollView: {
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     width: "100%",
   },
   modalContent: {
