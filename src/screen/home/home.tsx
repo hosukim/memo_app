@@ -1,4 +1,12 @@
-import { ScrollView, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from "react-native";
 import { useState } from "react";
 import IconButton from "../../component/button/IconButton";
 import CircleButton from "../../component/button/CircleButton";
@@ -7,6 +15,9 @@ import TextItem from "../../component/item/TextItem";
 
 function Home({ navigation }: any) {
   const [showAppOptions, setShowAppOptions] = useState(false);
+  const [todos, setTodos] = useState<TodoTypes[] | null>([
+    { index: 1, content: "TEST" },
+  ]);
   const onReset = () => {
     setShowAppOptions(false);
   };
@@ -24,17 +35,20 @@ function Home({ navigation }: any) {
   const onSaveImageAsync = async () => {
     // we will implement this later
   };
+
+  const renderItem = ({ item }: { item: TodoTypes }) => {
+    return <TextItem content={item.content} />;
+  };
+
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <TextItem content={"TEst TEST TEST TEST TEST"} />
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={todos}
+        renderItem={renderItem}
+        keyExtractor={(item) => String(item.index)}
+        style={styles.flatList}
+      />
+
       <View style={styles.optionsContainer}>
         <View style={styles.optionsRow}>
           <IconButton icon="refresh" label="Reset" onPress={onReset} />
@@ -48,7 +62,7 @@ function Home({ navigation }: any) {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -57,11 +71,10 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f3f3f3",
+    backgroundColor: "#333",
     alignItems: "center",
   },
-  scrollView: {
-    // paddingHorizontal: 10,
+  flatList: {
     width: "100%",
   },
   modalContent: {
