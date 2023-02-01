@@ -14,13 +14,9 @@ import { ScreenName } from "../../constant/Screen";
 import TextItem from "../../component/item/TextItem";
 
 function Home({ navigation }: any) {
-  const [showAppOptions, setShowAppOptions] = useState(false);
   const [todos, setTodos] = useState<TodoTypes[] | null>([
     { index: 1, content: "TEST" },
   ]);
-  const onReset = () => {
-    setShowAppOptions(false);
-  };
 
   const onAddSticker = () => {
     // we will implement this later
@@ -51,14 +47,16 @@ function Home({ navigation }: any) {
 
       <View style={styles.optionsContainer}>
         <View style={styles.optionsRow}>
-          <IconButton icon="refresh" label="Reset" onPress={onReset} />
+          <IconButton
+            icon="refresh"
+            label="Reset"
+            onPress={() => navigation.push(ScreenName.history)}
+          />
           <CircleButton onPress={onAddSticker} />
           <IconButton
             icon="settings"
             label={ScreenName.setting}
-            onPress={() => {
-              navigation.push(ScreenName.setting);
-            }}
+            onPress={() => navigation.push(ScreenName.setting)}
           />
         </View>
       </View>

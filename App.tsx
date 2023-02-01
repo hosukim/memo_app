@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Setting from "./src/screen/setting/Setting";
 import Home from "./src/screen/home/Home";
 import { ScreenName } from "./src/constant/Screen";
+import History from "./src/screen/history/History";
 
 const RootStack = createNativeStackNavigator();
 
@@ -18,6 +19,11 @@ export default function App() {
         <RootStack.Screen
           name={ScreenName.setting}
           component={Setting}
+          options={{ headerTitleAlign: "center" }}
+        />
+        <RootStack.Screen
+          name={ScreenName.history}
+          component={History}
           options={{ headerTitleAlign: "center" }}
         />
       </RootStack.Navigator>
