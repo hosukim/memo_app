@@ -1,5 +1,6 @@
 type TodoTypes = {
   index: number;
-  content: string;
+  label: string;
+  key?: string;
   dttm?: Date;
 };
