@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { globalStyles } from "../../../../util/globalStyles";
 
 const UnderlayRight = () => {
-  const { close } = useSwipeableItemParams<TodoTypes>();
+  const { close } = useSwipeableItemParams<TodoType>();
   return (
     <Animated.View style={[globalStyles.row, styles.underlayRight]}>
       <TouchableOpacity onPressOut={close}>

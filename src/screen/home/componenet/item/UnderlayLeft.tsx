@@ -12,7 +12,7 @@ const UnderlayLeft = ({
   drag: () => void;
   onPressDelete: () => void;
 }) => {
-  const { item, percentOpen } = useSwipeableItemParams<TodoTypes>();
+  const { item, percentOpen } = useSwipeableItemParams<TodoType>();
   const animStyle = useAnimatedStyle(
     () => ({
       opacity: percentOpen.value,

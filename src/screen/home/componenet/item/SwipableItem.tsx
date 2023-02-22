@@ -8,7 +8,7 @@ import UnderlayRight from "./UnderlayRight";
 import { globalStyles } from "../../../../util/globalStyles";
 
 type TodoItemTypes = {
-  todo: TodoTypes;
+  todo: TodoType;
   isActive: boolean;
   drag: () => void;
   onPressDelete: () => void;

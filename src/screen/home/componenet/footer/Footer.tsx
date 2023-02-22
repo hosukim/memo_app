@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View, ToastAndroid } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import IconButton from "../../../../component/button/IconButton";
 import CircleButton from "../../../../component/button/CircleButton";
 import { ScreenName } from "../../../../constant/Screen";
 import { useNavigation } from "@react-navigation/core";
+import Input from "../../../../component/input/Input";
 
 const Footer = () => {
   const navigation = useNavigation();
+  const [content, setContent] = useState<String>();
   const onAddSticker = () => {
     ToastAndroid.showWithGravity(
       "등록되었습니다",
@@ -16,6 +18,7 @@ const Footer = () => {
   };
   return (
     <View style={styles.optionsContainer}>
+      <Input setContent={setContent} />
       <View style={styles.optionsRow}>
         <IconButton
           icon="refresh"
@@ -41,6 +44,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 20,
     alignSelf: "center",
+    bottom: 0,
+    height: 100,
   },
   optionsRow: {
     alignItems: "center",

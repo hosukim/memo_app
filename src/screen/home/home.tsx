@@ -9,6 +9,7 @@ import DraggableFlatList, {
 import SwipableItem from "./componenet/item/SwipableItem";
 import { ScreenName } from "../../constant/Screen";
 import Footer from "./componenet/footer/Footer";
+import { ScrollView } from "react-native-gesture-handler";
 
 const TABLE_USER = "tb_user";
 const DBInstance = initDatabaseConfig();
@@ -49,9 +50,21 @@ const initTodos = [
   },
   { index: 4, content: "TEST4" },
   { index: 5, content: "TEST5" },
+  { index: 6, content: "TEST5" },
+  { index: 7, content: "TEST5" },
+  { index: 8, content: "TEST5" },
+  { index: 9, content: "TEST6" },
+  { index: 10, content: "TEST5" },
+  { index: 11, content: "TEST5" },
+  { index: 12, content: "TEST5" },
+  { index: 13, content: "TEST82" },
+  { index: 14, content: "TEST5" },
+  { index: 15, content: "TEST5" },
+  { index: 15, content: "TEST5" },
+  { index: 15, content: "TEST5" },
 ];
 
-const initialData: TodoTypes[] = initTodos.map((d, i) => {
+const initialData: TodoType[] = initTodos.map((d, i) => {
   return {
     index: i,
     key: `todo-${i}`,
@@ -60,7 +73,8 @@ const initialData: TodoTypes[] = initTodos.map((d, i) => {
 });
 
 export default function Home({ navigation }: any) {
-  const [todos, setTodos] = useState<TodoTypes[]>(initialData);
+  const [todos, setTodos] = useState<TodoType[]>(initialData);
+  const [scrollEnabled, setScrollEnabled] = useState(true);
   const itemRefs = useRef(new Map());
   useEffect(() => {
     (async () => {
@@ -77,7 +91,7 @@ export default function Home({ navigation }: any) {
   };
 
   const renderItem = useCallback(
-    ({ item, drag, isActive }: RenderItemParams<TodoTypes>) => {
+    ({ item, drag, isActive }: RenderItemParams<TodoType>) => {
       const onPressDelete = () => {
         setTodos((prev) => {
           return prev.filter((todo) => todo !== item);
@@ -98,15 +112,20 @@ export default function Home({ navigation }: any) {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 0.8 }}>
       <DraggableFlatList
         keyExtractor={(item) => `${item.key}`}
         data={todos}
         renderItem={renderItem}
-        onDragEnd={({ data }) => setTodos(data)}
+        // onDragBegin={() => {
+        //   setScrollEnabled(false);
+        // }}
+        onDragEnd={({ data }) => {
+          setScrollEnabled(true);
+          setTodos(data);
+        }}
         activationDistance={20}
       />
-
       <Footer />
     </View>
   );

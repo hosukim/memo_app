@@ -1,4 +1,4 @@
-type TodoTypes = {
+type TodoType = {
   index: number;
   label: string;
   key?: string;
