@@ -1,15 +1,11 @@
-import { StyleSheet, View } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { useState, useEffect, useCallback, useRef } from "react";
-import IconButton from "../../component/button/IconButton";
-import CircleButton from "../../component/button/CircleButton";
 import { initDatabaseConfig } from "../../config/SqliteConfig";
 import DraggableFlatList, {
   RenderItemParams,
 } from "react-native-draggable-flatlist";
 import SwipableItem from "./componenet/item/SwipableItem";
-import { ScreenName } from "../../constant/Screen";
 import Footer from "./componenet/footer/Footer";
-import { ScrollView } from "react-native-gesture-handler";
 
 const TABLE_USER = "tb_user";
 const DBInstance = initDatabaseConfig();
@@ -112,14 +108,11 @@ export default function Home({ navigation }: any) {
   );
 
   return (
-    <View style={{ flex: 0.8 }}>
+    <View style={styles.block}>
       <DraggableFlatList
         keyExtractor={(item) => `${item.key}`}
         data={todos}
         renderItem={renderItem}
-        // onDragBegin={() => {
-        //   setScrollEnabled(false);
-        // }}
         onDragEnd={({ data }) => {
           setScrollEnabled(true);
           setTodos(data);
@@ -130,3 +123,11 @@ export default function Home({ navigation }: any) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  block: {
+    flex: 1,
+    height: Dimensions.get("window").height - 100,
+    paddingBottom: 100,
+  },
+});

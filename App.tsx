@@ -1,10 +1,9 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Platform, UIManager } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import IconButton from "./src/component/button/IconButton";
+import RouteButton from "./src/component/button/RouteButton";
 import { ScreenName } from "./src/constant/Screen";
 import History from "./src/screen/history/History";
 import Home from "./src/screen/home/Home";
@@ -29,10 +28,10 @@ export default function App() {
               options={{
                 headerTitleAlign: "center",
                 headerLeft: () => (
-                  <IconButton icon="restore" page={ScreenName.history} />
+                  <RouteButton icon="restore" page={ScreenName.history} />
                 ),
                 headerRight: () => (
-                  <IconButton icon="settings" page={ScreenName.history} />
+                  <RouteButton icon="settings" page={ScreenName.setting} />
                 ),
               }}
             />

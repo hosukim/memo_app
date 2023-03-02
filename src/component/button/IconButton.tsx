@@ -1,18 +1,16 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/core";
 
 type ButtonType = {
   icon: keyof typeof MaterialIcons.glyphMap;
-  page: String;
+  onPress: () => void;
 };
 
-export default function IconButton({ icon, page }: ButtonType) {
-  const navigation = useNavigation<any>();
+export default function IconButton({ icon, onPress }: ButtonType) {
   return (
     <Pressable
       style={styles.iconButton}
-      onPress={() => navigation.navigate(page)}
+      onPress={onPress}
     >
       <MaterialIcons name={icon} size={24} />
     </Pressable>
