@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 
 const DATABASE_NAME: string = "db.testDb"; // db.데이터베이스 명
 let db: SQLite.WebSQLDatabase | null = null;
+export const TABLE_TODO = "tb_todoList";
 
 /**
  * 최초 데이터 베이스에 연결한다.
@@ -24,4 +25,8 @@ export const initDatabaseConfig = (): any => {
   // [필수] 코드가 트랜잭션내에서 작동하지 않는 경우
   db.exec([{ sql: "PRAGMA foreign_keys = ON;", args: [] }], false, () => {});
   return db;
+};
+
+export const getDBInstance = (): any => {
+  return SQLite.openDatabase(DATABASE_NAME);
 };

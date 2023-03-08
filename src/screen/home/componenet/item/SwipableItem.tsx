@@ -39,7 +39,7 @@ export default function SwipableItem({
   return (
     <ScaleDecorator>
       <SwipeableItem
-        key={todo.index}
+        key={todo.id}
         item={todo}
         ref={(ref) => {
           if (ref && !todoRefs.current.get(todo.key)) {
@@ -69,7 +69,7 @@ export default function SwipableItem({
           ]}
           delayLongPress={250}
         >
-          <Text style={[globalStyles.text]}>{`${todo.label}`}</Text>
+          <Text style={[globalStyles.text]}>{`${todo.content}`}</Text>
         </TouchableOpacity>
       </SwipeableItem>
     </ScaleDecorator>

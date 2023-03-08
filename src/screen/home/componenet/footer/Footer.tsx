@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, ToastAndroid } from "react-native";
 import React, { useState } from "react";
 import CircleButton from "../../../../component/button/CircleButton";
-import { useNavigation } from "@react-navigation/core";
 import Input from "../../../../component/input/Input";
+import { getDBInstance, TABLE_TODO } from "../../../../config/SqliteConfig";
+
+const db = getDBInstance();
 
 const Footer = () => {
   const [activeInput, setActiveInput] = useState<boolean>(false);
@@ -13,12 +15,42 @@ const Footer = () => {
   };
 
   const onSubmit = () => {
-    setActiveInput(false);
-    ToastAndroid.showWithGravity(
-      "등록되었습니다",
-      ToastAndroid.SHORT,
-      ToastAndroid.CENTER
-    );
+    if (content === "") {
+      setActiveInput(false);
+    } else {
+      db.transaction((tx: any) => {
+        tx.executeSql(
+          'INSERT INTO tb_todoList (content, dttm, showFlag) VALUES (?, datetime("now"), ?)',
+          [content, true],
+          (
+            _,
+            {
+              rowsAffected,
+              insertId,
+            }: { rowsAffected: number; insertId: number }
+          ) => {
+            if (rowsAffected > 0) {
+              console.log(
+                `Inserted todo with id ${insertId} and text "${content}"`
+              );
+            }
+          },
+          (_, error: string) => {
+            console.log("Error inserting todo:", error);
+          }
+        );
+        // tx.executeSql(`select * from ${TABLE_TODO}`, [], (_, { rows }) =>
+        //   console.log(JSON.stringify(rows))
+        // );
+      });
+      setContent("");
+      setActiveInput(false);
+      ToastAndroid.showWithGravity(
+        "등록되었습니다",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
+    }
   };
 
   return (

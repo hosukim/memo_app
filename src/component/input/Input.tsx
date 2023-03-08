@@ -18,7 +18,6 @@ export default function Input({ content, setContent, onSubmit }: InputType) {
         onChangeText={(value) => setContent(value)}
         style={{ flex: 1 }}
         value={content}
-        // onSubmit={onSubmit}
         hint={"메모는 습관입니다"}
         rightComponent={<IconButton icon="done" onPress={onSubmit} />}
         onFocus={(e) => e.target.focus()}

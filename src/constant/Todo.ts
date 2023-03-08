@@ -1,6 +1,7 @@
 type TodoType = {
-  index: number;
-  label: string;
-  key?: string;
+  id: number;
+  content: string;
   dttm?: Date;
+  showFlag?: boolean;
+  key?: string;
 };
