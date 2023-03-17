@@ -1,34 +1,34 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { FloatingLabelInput } from "react-native-floating-label-input";
-import IconButton from "../button/IconButton";
-import { MaterialIcons } from "@expo/vector-icons";
 
 type InputType = {
   content: string;
   setContent: (value: string) => void;
-  onSubmit: () => void;
+  inputRef: any;
 };
 
-export default function Input({ content, setContent, onSubmit }: InputType) {
+export default function Input({ content, setContent, inputRef }: InputType) {
   return (
-    <View style={styles.block}>
-      <FloatingLabelInput
-        label="할 일을 적어주세요"
-        onChangeText={(value) => setContent(value)}
-        style={{ flex: 1 }}
-        value={content}
-        hint={"메모는 습관입니다"}
-        rightComponent={<IconButton icon="done" onPress={onSubmit} />}
-        onFocus={(e) => e.target.focus()}
-      />
-    </View>
+    <FloatingLabelInput
+      label="할 일을 적어주세요"
+      onChangeText={(value) => setContent(value)}
+      style={styles.input}
+      value={content}
+      hint={"메모는 습관입니다"}
+      onFocus={(e) => e.target.focus()}
+      ref={inputRef}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  block: {
+  input: {
     flex: 1,
-    marginBottom: 20,
+    backgroundColor: "#fff",
+    marginRight: 10,
+    paddingHorizontal: 10,
+    height: 40,
+    borderRadius: 5,
   },
 });

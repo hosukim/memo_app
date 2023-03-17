@@ -13,12 +13,14 @@ export default function Home({ navigation }: any) {
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const itemRefs = useRef(new Map());
+  const inputRef = useRef<any>(null);
+
   useEffect(() => {
     db.transaction((tx: any) => {
       tx.executeSql(
         `SELECT * FROM ${TABLE_TODO}`,
         [],
-        (_, { rows }: SQLiteResponseType) => {
+        (_: any, { rows }: SQLiteResponseType) => {
           const allTodos = [];
           for (let i = 0; i < rows.length; i++) {
             const row = rows._array[i];
@@ -31,7 +33,7 @@ export default function Home({ navigation }: any) {
         }
       );
     });
-  }, [todos]);
+  }, [todos, db]);
 
   const renderItem = useCallback(
     ({ item, drag, isActive }: RenderItemParams<TodoType>) => {
@@ -40,10 +42,10 @@ export default function Home({ navigation }: any) {
           tx.executeSql(
             `DELETE FROM ${TABLE_TODO} WHERE id=(?);`,
             [item.id],
-            (_) => {
+            (_: any) => {
               console.log(`delete todo with content: "${item.content}"}`);
             },
-            (_, error) => {
+            (_: any, error: any) => {
               console.log("Error inserting todo:", error);
             }
           );
@@ -64,8 +66,15 @@ export default function Home({ navigation }: any) {
     []
   );
 
+  const checkTouchPosition = (e: any) => {
+    const { locationY } = e.nativeEvent;
+    if (locationY > 100) {
+      inputRef.current.blur();
+    }
+  };
+
   return (
-    <View style={styles.block}>
+    <View style={styles.block} onTouchEnd={checkTouchPosition}>
       <DraggableFlatList
         keyExtractor={(item) => `${item.key}`}
         data={todos}
@@ -76,7 +85,7 @@ export default function Home({ navigation }: any) {
         }}
         activationDistance={20}
       />
-      <Footer setTodos={setTodos} />
+      <Footer inputRef={inputRef} />
     </View>
   );
 }
