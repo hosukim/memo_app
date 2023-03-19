@@ -6,7 +6,7 @@ import { getDBInstance, TABLE_TODO } from "../../../../config/SqliteConfig";
 
 const db = getDBInstance();
 
-const Footer = ({ inputRef }: { inputRef: any }) => {
+const Footer = ({ inputRef, setTodos }: { inputRef: any; setTodos: any }) => {
   const [content, setContent] = useState<string>("");
 
   const onSubmit = () => {
@@ -33,6 +33,10 @@ const Footer = ({ inputRef }: { inputRef: any }) => {
       // );
     });
     setContent("");
+    setTodos((prev: TodoType[]) => [
+      ...prev,
+      { content, key: `todo-${content}`, dttm: new Date(), showFlag: true },
+    ]);
     ToastAndroid.showWithGravity(
       "등록되었습니다",
       ToastAndroid.SHORT,

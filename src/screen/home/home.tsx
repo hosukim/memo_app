@@ -1,39 +1,52 @@
 import { View, Dimensions, StyleSheet } from "react-native";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getDBInstance, TABLE_TODO } from "../../config/SqliteConfig";
+import {
+  getDBInstance,
+  initDatabaseConfig,
+  TABLE_TODO,
+} from "../../config/SqliteConfig";
 import DraggableFlatList, {
   RenderItemParams,
 } from "react-native-draggable-flatlist";
 import SwipableItem from "./componenet/item/SwipableItem";
 import Footer from "./componenet/footer/Footer";
 
-const db = getDBInstance();
-
 export default function Home({ navigation }: any) {
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const itemRefs = useRef(new Map());
   const inputRef = useRef<any>(null);
+  const [db, setDb] = useState<any>(initDatabaseConfig());
 
   useEffect(() => {
-    db.transaction((tx: any) => {
-      tx.executeSql(
-        `SELECT * FROM ${TABLE_TODO}`,
-        [],
-        (_: any, { rows }: SQLiteResponseType) => {
-          const allTodos = [];
-          for (let i = 0; i < rows.length; i++) {
-            const row = rows._array[i];
-            allTodos.push({
-              ...row,
-              key: `todo-${row.id}`,
-            });
+    console.log("db: ", db);
+    if (db === null) {
+      setDb(getDBInstance());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (db !== null) {
+      db.transaction((tx: any) => {
+        tx.executeSql(
+          `SELECT * FROM ${TABLE_TODO}`,
+          [],
+          (_: any, { rows }: SQLiteResponseType) => {
+            const allTodos = [];
+            for (let i = 0; i < rows.length; i++) {
+              const row = rows._array[i];
+              allTodos.push({
+                ...row,
+                key: `todo-${row.id}`,
+              });
+            }
+            console.log("allTodos : ", allTodos);
+            setTodos(allTodos);
           }
-          setTodos(allTodos);
-        }
-      );
-    });
-  }, [todos, db]);
+        );
+      });
+    }
+  }, [db]);
 
   const renderItem = useCallback(
     ({ item, drag, isActive }: RenderItemParams<TodoType>) => {

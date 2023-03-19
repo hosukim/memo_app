@@ -22,6 +22,16 @@ export const initDatabaseConfig = (): any => {
     };
   }
   db = SQLite.openDatabase(DATABASE_NAME);
+  db.transaction((tx: any) => {
+    tx.executeSql(`
+      CREATE TABLE IF NOT EXISTS ${TABLE_TODO} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT,
+        dttm DATETIME,
+        showFlag INTEGER
+      );
+    `);
+  });
   // [필수] 코드가 트랜잭션내에서 작동하지 않는 경우
   db.exec([{ sql: "PRAGMA foreign_keys = ON;", args: [] }], false, () => {});
   return db;
