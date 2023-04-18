@@ -38,5 +38,6 @@ export const initDatabaseConfig = (): any => {
 };
 
 export const getDBInstance = (): any => {
-  return SQLite.openDatabase(DATABASE_NAME);
+  // db가 null이면 초기화를 해주고, null이 아니면 그대로 반환
+  return db === null ? initDatabaseConfig() : db;
 };

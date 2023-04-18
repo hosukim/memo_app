@@ -1,10 +1,6 @@
 import { View, Dimensions, StyleSheet } from "react-native";
 import { useState, useEffect, useCallback, useRef } from "react";
-import {
-  getDBInstance,
-  initDatabaseConfig,
-  TABLE_TODO,
-} from "../../config/SqliteConfig";
+import { getDBInstance, TABLE_TODO } from "../../config/SqliteConfig";
 import DraggableFlatList, {
   RenderItemParams,
 } from "react-native-draggable-flatlist";
@@ -16,14 +12,7 @@ export default function Home({ navigation }: any) {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const itemRefs = useRef(new Map());
   const inputRef = useRef<any>(null);
-  const [db, setDb] = useState<any>(initDatabaseConfig());
-
-  useEffect(() => {
-    console.log("db: ", db);
-    if (db === null) {
-      setDb(getDBInstance());
-    }
-  }, []);
+  const db = getDBInstance();
 
   useEffect(() => {
     if (db !== null) {
@@ -32,15 +21,15 @@ export default function Home({ navigation }: any) {
           `SELECT * FROM ${TABLE_TODO}`,
           [],
           (_: any, { rows }: SQLiteResponseType) => {
+            console.log("rows: ", rows);
             const allTodos = [];
             for (let i = 0; i < rows.length; i++) {
               const row = rows._array[i];
               allTodos.push({
                 ...row,
-                key: `todo-${row.id}`,
+                // key: `todo-${row.id}`,
               });
             }
-            console.log("allTodos : ", allTodos);
             setTodos(allTodos);
           }
         );
@@ -48,22 +37,64 @@ export default function Home({ navigation }: any) {
     }
   }, [db]);
 
+  useEffect(() => {
+    console.log("todos: ", todos);
+    if (todos.length === 0 || db === null) {
+      return;
+    }
+    db.transaction((tx: any) => {
+      tx.executeSql(
+        // table TODO에 있는 모든 데이터를 비우고 todos에 있는 데이터를 다시 넣는다.
+        `DELETE FROM ${TABLE_TODO};`,
+        [],
+        (_: any) => {
+          console.log("delete all data");
+        }
+      );
+      todos.forEach((todo) => {
+        tx.executeSql(
+          `INSERT INTO ${TABLE_TODO} (id, content, dttm, showFlag) VALUES (?, ?, ?, ?);`,
+          [todo.id, todo.content, todo.dttm, todo.showFlag],
+          (_: any) => {
+            console.log(`insert content: "${JSON.stringify(todo)}"`);
+          },
+          (_: any, error: any) => {
+            console.log("Error insert:", error);
+          }
+        );
+      });
+    });
+  }, [todos]);
+
   const renderItem = useCallback(
     ({ item, drag, isActive }: RenderItemParams<TodoType>) => {
+      if (!item.showFlag) {
+        return null;
+      }
       const onPressDelete = () => {
         db.transaction((tx: any) => {
           tx.executeSql(
-            `DELETE FROM ${TABLE_TODO} WHERE id=(?);`,
-            [item.id],
+            `UPDATE ${TABLE_TODO} SET showFlag=(?) WHERE id=(?);`,
+            [0, item.id],
             (_: any) => {
-              console.log(`delete todo with content: "${item.content}"}`);
+              console.log(`update showFlag 0 content: "${item.content}"}`);
             },
             (_: any, error: any) => {
-              console.log("Error inserting todo:", error);
+              console.log("Error update showFlag:", error);
             }
           );
         });
-        setTodos((prev) => prev.filter((todo) => todo !== item));
+        setTodos((prev) => {
+          return prev.map((todo) => {
+            if (todo.id === item.id) {
+              return {
+                ...todo,
+                showFlag: false,
+              };
+            }
+            return todo;
+          });
+        });
       };
 
       return (
@@ -89,7 +120,7 @@ export default function Home({ navigation }: any) {
   return (
     <View style={styles.block} onTouchEnd={checkTouchPosition}>
       <DraggableFlatList
-        keyExtractor={(item) => `${item.key}`}
+        keyExtractor={(item) => `${item.id}`}
         data={todos}
         renderItem={renderItem}
         onDragEnd={({ data }) => {
@@ -98,7 +129,7 @@ export default function Home({ navigation }: any) {
         }}
         activationDistance={20}
       />
-      <Footer inputRef={inputRef} />
+      <Footer inputRef={inputRef} setTodos={setTodos} />
     </View>
   );
 }

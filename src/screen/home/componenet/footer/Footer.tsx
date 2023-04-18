@@ -10,32 +10,24 @@ const Footer = ({ inputRef, setTodos }: { inputRef: any; setTodos: any }) => {
   const [content, setContent] = useState<string>("");
 
   const onSubmit = () => {
+    // insert 쿼리 실행
+    // db insert가 끝나면 setTodos 실행
     db.transaction((tx: any) => {
       tx.executeSql(
-        'INSERT INTO tb_todoList (content, dttm, showFlag) VALUES (?, datetime("now"), ?)',
-        [content, true],
-        (
-          _,
-          { rowsAffected, insertId }: { rowsAffected: number; insertId: number }
-        ) => {
-          if (rowsAffected > 0) {
-            console.log(
-              `Inserted todo with id ${insertId} and text "${content}"`
-            );
-          }
+        `INSERT INTO ${TABLE_TODO} (content, dttm, showFlag) VALUES (?, datetime("now"), ?)`,
+        [content, 1],
+        (_: any) => {
+          console.log(`insert content: "${content}"`);
         },
-        (_, error: string) => {
-          console.log("Error inserting todo:", error);
+        (_: any, error: any) => {
+          console.log("Error insert:", error);
         }
       );
-      // tx.executeSql(`select * from ${TABLE_TODO}`, [], (_, { rows }) =>
-      //   console.log(JSON.stringify(rows))
-      // );
     });
     setContent("");
     setTodos((prev: TodoType[]) => [
       ...prev,
-      { content, key: `todo-${content}`, dttm: new Date(), showFlag: true },
+      { id: prev.length + 1, content, dttm: new Date(), showFlag: 1 },
     ]);
     ToastAndroid.showWithGravity(
       "등록되었습니다",
