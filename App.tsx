@@ -7,8 +7,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import RouteButton from "./src/component/button/RouteButton";
 import { ScreenName } from "./src/constant/Screen";
 import History from "./src/screen/history/History";
-import Home from "./src/screen/home/Home";
-import Setting from "./src/screen/setting/Setting";
+import Home from "./src/screen/home/home";
+import Setting from "./src/screen/setting/setting";
 
 const RootStack = createNativeStackNavigator();
 

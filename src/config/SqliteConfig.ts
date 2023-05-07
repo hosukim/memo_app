@@ -28,7 +28,8 @@ export const initDatabaseConfig = (): any => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         content TEXT,
         dttm DATETIME,
-        showFlag INTEGER
+        showFlag INTEGER,
+        showOrder INTEGER
       );
     `);
   });

@@ -18,7 +18,7 @@ export default function Home({ navigation }: any) {
     if (db !== null) {
       db.transaction((tx: any) => {
         tx.executeSql(
-          `SELECT * FROM ${TABLE_TODO}`,
+          `SELECT * FROM ${TABLE_TODO} ORDER BY showOrder ASC`,
           [],
           (_: any, { rows }: SQLiteResponseType) => {
             console.log("rows: ", rows);
@@ -44,22 +44,21 @@ export default function Home({ navigation }: any) {
     }
     db.transaction((tx: any) => {
       tx.executeSql(
-        // table TODO에 있는 모든 데이터를 비우고 todos에 있는 데이터를 다시 넣는다.
         `DELETE FROM ${TABLE_TODO};`,
         [],
         (_: any) => {
           console.log("delete all data");
         }
       );
-      todos.forEach((todo) => {
+      todos.forEach((todo, index) => {
         tx.executeSql(
-          `INSERT INTO ${TABLE_TODO} (id, content, dttm, showFlag) VALUES (?, ?, ?, ?);`,
-          [todo.id, todo.content, todo.dttm, todo.showFlag],
+          `INSERT INTO ${TABLE_TODO} (id, content, dttm, showFlag, showOrder) VALUES (?, ?, ?, ?, ?);`,
+          [todo.id, todo.content, todo.dttm, todo.showFlag, index],
           (_: any) => {
             console.log(`insert content: "${JSON.stringify(todo)}"`);
           },
           (_: any, error: any) => {
-            console.log("Error insert:", error);
+            console.error(error);
           }
         );
       });
@@ -129,7 +128,7 @@ export default function Home({ navigation }: any) {
         }}
         activationDistance={20}
       />
-      <Footer inputRef={inputRef} setTodos={setTodos} />
+      <Footer inputRef={inputRef} todosLength={todos.length} setTodos={setTodos} />
     </View>
   );
 }

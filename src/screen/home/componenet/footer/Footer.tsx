@@ -4,30 +4,37 @@ import CircleButton from "../../../../component/button/CircleButton";
 import Input from "../../../../component/input/Input";
 import { getDBInstance, TABLE_TODO } from "../../../../config/SqliteConfig";
 
-const db = getDBInstance();
-
-const Footer = ({ inputRef, setTodos }: { inputRef: any; setTodos: any }) => {
+const Footer = ({ inputRef, todosLength, setTodos }: { inputRef: any; todosLength: number; setTodos: any }) => {
   const [content, setContent] = useState<string>("");
+  // const db = getDBInstance();
 
   const onSubmit = () => {
-    // insert 쿼리 실행
-    // db insert가 끝나면 setTodos 실행
-    db.transaction((tx: any) => {
-      tx.executeSql(
-        `INSERT INTO ${TABLE_TODO} (content, dttm, showFlag) VALUES (?, datetime("now"), ?)`,
-        [content, 1],
-        (_: any) => {
-          console.log(`insert content: "${content}"`);
-        },
-        (_: any, error: any) => {
-          console.log("Error insert:", error);
-        }
+    // db에 저장 insert 해야한다.
+    if (content === "") {
+      ToastAndroid.showWithGravity(
+        "내용을 입력해주세요",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
       );
-    });
+      return;
+    }
+    // db.transaction((tx: any) => {
+    //   tx.executeSql(
+    //     `INSERT INTO ${TABLE_TODO} (content, dttm, showFlag, showOrder) VALUES (?, ?, ?, ?);`,
+    //     [content, new Date(), 1, todosLength + 1],
+    //     (_: any) => {
+    //       console.log(`insert content: "${content}"`);
+    //     },
+    //     (_, error: any) => {
+    //       console.error(error);
+    //     }
+    //   );
+    // });
+
     setContent("");
     setTodos((prev: TodoType[]) => [
       ...prev,
-      { id: prev.length + 1, content, dttm: new Date(), showFlag: 1 },
+      { id: prev.length + 1, content, dttm: new Date(), showFlag: 1, showOrder: todosLength + 1 },
     ]);
     ToastAndroid.showWithGravity(
       "등록되었습니다",
