@@ -18,18 +18,6 @@ const Footer = ({ inputRef, todosLength, setTodos }: { inputRef: any; todosLengt
       );
       return;
     }
-    // db.transaction((tx: any) => {
-    //   tx.executeSql(
-    //     `INSERT INTO ${TABLE_TODO} (content, dttm, showFlag, showOrder) VALUES (?, ?, ?, ?);`,
-    //     [content, new Date(), 1, todosLength + 1],
-    //     (_: any) => {
-    //       console.log(`insert content: "${content}"`);
-    //     },
-    //     (_, error: any) => {
-    //       console.error(error);
-    //     }
-    //   );
-    // });
 
     setContent("");
     setTodos((prev: TodoType[]) => [

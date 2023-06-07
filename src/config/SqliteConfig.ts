@@ -10,7 +10,7 @@ export const TABLE_TODO = "tb_todoList";
  * ㄴ 데이터베이스 연결을 위해서는 필수.
  * @returns {SQLite.WebSQLDatabase} db
  */
-export const initDatabaseConfig = (): any => {
+const initDatabaseConfig = (): any => {
   // 웹 플랫폼은 지원하지 않음.
   if (Platform.OS === "web") {
     return {
@@ -40,5 +40,6 @@ export const initDatabaseConfig = (): any => {
 
 export const getDBInstance = (): any => {
   // db가 null이면 초기화를 해주고, null이 아니면 그대로 반환
+  console.log("db: ", db);
   return db === null ? initDatabaseConfig() : db;
 };

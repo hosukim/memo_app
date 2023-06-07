@@ -12,7 +12,9 @@ const initialState: MemoType[] = [];
 export const memoSlice = createSlice({
   name: "memo",
   initialState,
-  reducers: {},
+  reducers: {
+    
+  },
 });
 
 export const {} = memoSlice.actions;

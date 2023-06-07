@@ -12,7 +12,7 @@ export default function Home({ navigation }: any) {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const itemRefs = useRef(new Map());
   const inputRef = useRef<any>(null);
-  const db = getDBInstance();
+  const [db] = useState(getDBInstance());
 
   useEffect(() => {
     if (db !== null) {
@@ -21,7 +21,6 @@ export default function Home({ navigation }: any) {
           `SELECT * FROM ${TABLE_TODO} ORDER BY showOrder ASC`,
           [],
           (_: any, { rows }: SQLiteResponseType) => {
-            console.log("rows: ", rows);
             const allTodos = [];
             for (let i = 0; i < rows.length; i++) {
               const row = rows._array[i];
@@ -38,18 +37,13 @@ export default function Home({ navigation }: any) {
   }, [db]);
 
   useEffect(() => {
-    console.log("todos: ", todos);
     if (todos.length === 0 || db === null) {
       return;
     }
     db.transaction((tx: any) => {
-      tx.executeSql(
-        `DELETE FROM ${TABLE_TODO};`,
-        [],
-        (_: any) => {
-          console.log("delete all data");
-        }
-      );
+      tx.executeSql(`DELETE FROM ${TABLE_TODO};`, [], (_: any) => {
+        console.log("delete all data");
+      });
       todos.forEach((todo, index) => {
         tx.executeSql(
           `INSERT INTO ${TABLE_TODO} (id, content, dttm, showFlag, showOrder) VALUES (?, ?, ?, ?, ?);`,
@@ -128,7 +122,11 @@ export default function Home({ navigation }: any) {
         }}
         activationDistance={20}
       />
-      <Footer inputRef={inputRef} todosLength={todos.length} setTodos={setTodos} />
+      <Footer
+        inputRef={inputRef}
+        todosLength={todos.length}
+        setTodos={setTodos}
+      />
     </View>
   );
 }
